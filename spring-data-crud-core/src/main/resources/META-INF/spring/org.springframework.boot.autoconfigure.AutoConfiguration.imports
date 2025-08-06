@@ -1,0 +1,2 @@
+com.peluware.springframework.crud.core.autoconfigurations.SpringDataCrudAutoConfiguration
+com.peluware.springframework.crud.core.autoconfigurations.SpringDocDataCrudAutoConfiguration
