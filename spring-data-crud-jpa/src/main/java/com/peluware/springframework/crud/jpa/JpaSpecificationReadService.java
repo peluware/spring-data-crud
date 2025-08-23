@@ -1,10 +1,11 @@
 package com.peluware.springframework.crud.jpa;
 
 
+import com.peluware.omnisearch.jpa.JpaOmniSearch;
+import com.peluware.springframework.crud.core.OmniSearchOptionsFactory;
 import cz.jirutka.rsql.parser.ast.Node;
 import com.peluware.omnisearch.core.OmniSearchBaseOptions;
 import com.peluware.omnisearch.core.OmniSearchOptions;
-import com.peluware.omnisearch.jpa.JpaOmniSearchPredicateBuilder;
 import com.peluware.springframework.crud.core.CrudOperation;
 import com.peluware.springframework.crud.core.providers.EntityClassProvider;
 import com.peluware.springframework.crud.core.providers.RepositoryProvider;
@@ -28,20 +29,8 @@ import java.util.List;
  * <p>
  * Designed for use cases where access to entities should be filtered or constrained — for example,
  * verifying that the currently authenticated user is associated with or owns the entity.
- * It supports specification composition through {@link SpecificationCombiner}, making it
+ * It supports specification composition through {@link #combineSpecification(Specification, CrudOperation)}, making it
  * easy to add authorization, soft deletes, or tenant-based filters.
- *
- * <p><b>Usage Example:</b></p>
- * <pre>{@code
- * @Service
- * public class OrderReadService implements JpaSpecificationReadService<Order, UUID, OrderRepository> {
- *
- *     @Override
- *     public Specification<Order> combineSpecification(Specification<Order> original, CrudOperation op) {
- *         return original.and((root, query, cb) -> cb.equal(root.get("ownerId"), getCurrentUserId()));
- *     }
- * }
- * }</pre>
  *
  * @param <E>  the entity type, must extend {@link Persistable}
  * @param <ID> the ID type of the entity
@@ -52,8 +41,7 @@ public interface JpaSpecificationReadService<E extends Persistable<ID>, ID, R ex
         ReadService<E, ID>,
         RepositoryProvider<R>,
         EntityManagerProvider,
-        EntityClassProvider<E>,
-        SpecificationCombiner<E> {
+        EntityClassProvider<E> {
 
     /**
      * {@inheritDoc}
@@ -78,11 +66,7 @@ public interface JpaSpecificationReadService<E extends Persistable<ID>, ID, R ex
     @Override
     default Page<E> internalSearch(String search, Pageable pageable, Node query) {
         var options = toSearchOptions(search, pageable, query);
-        Specification<E> spec = (root, q, cb) -> JpaOmniSearchPredicateBuilder.buildPredicate(
-                getEntityManager(),
-                root,
-                options
-        );
+        Specification<E> spec = (root, q, cb) -> getOmniSearch().buildPredicate(root, cb, options);
         return getRepository().findAll(combineSpecification(spec, CrudOperation.PAGE), pageable);
     }
 
@@ -127,11 +111,7 @@ public interface JpaSpecificationReadService<E extends Persistable<ID>, ID, R ex
     @Override
     default long internalCount(String search, Node query) {
         var options = toBaseSearchOptions(search, query);
-        Specification<E> spec = (root, q, cb) -> JpaOmniSearchPredicateBuilder.buildPredicate(
-                getEntityManager(),
-                root,
-                options
-        );
+        Specification<E> spec = (root, q, cb) -> getOmniSearch().buildPredicate(root, cb, options);
         return getRepository().count(combineSpecification(spec, CrudOperation.COUNT));
     }
 
@@ -146,6 +126,20 @@ public interface JpaSpecificationReadService<E extends Persistable<ID>, ID, R ex
 
     default String getIdFieldName() {
         return "id";
+    }
+
+
+    /**
+     * Combines the given {@link Specification} with additional criteria based on the operation.
+     *
+     * @param spec      the original specification to combine
+     * @param operation the current CRUD operation context
+     * @return the combined specification
+     */
+    Specification<E> combineSpecification(Specification<E> spec, CrudOperation operation);
+
+    default JpaOmniSearch getOmniSearch() {
+        return new JpaOmniSearch(getEntityManager());
     }
 
     default OmniSearchOptions toSearchOptions(String search, Pageable pageable, Node query) {

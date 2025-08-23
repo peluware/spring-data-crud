@@ -1,4 +1,4 @@
-package com.peluware.springframework.crud.jpa;
+package com.peluware.springframework.crud.core;
 
 import com.peluware.domain.Order;
 import com.peluware.domain.Pagination;
@@ -10,15 +10,12 @@ import com.peluware.omnisearch.core.OmniSearchOptions;
 import lombok.experimental.UtilityClass;
 import org.springframework.data.domain.Pageable;
 
-import static com.peluware.domain.Pagination.unpaginated;
-import static com.peluware.domain.Sort.unsorted;
-
 /**
  * Utility class for creating {@link OmniSearchOptions} and {@link OmniSearchBaseOptions}
  * from Spring Data {@link Pageable} and RSQL query nodes.
  */
 @UtilityClass
-class OmniSearchOptionsFactory {
+public class OmniSearchOptionsFactory {
 
     /**
      * Creates an {@link OmniSearchOptions} instance based on search text, pagination, sorting, and RSQL query.
@@ -28,16 +25,16 @@ class OmniSearchOptionsFactory {
      * @param query    the parsed RSQL query node, may be null
      * @return a configured {@link OmniSearchOptions} instance
      */
-    static OmniSearchOptions create(String search, Pageable pageable, Node query) {
+    public static OmniSearchOptions create(String search, Pageable pageable, Node query) {
         var sort = pageable.getSort();
         return new OmniSearchOptions()
                 .search(search)
                 .query(query)
                 .pagination(pageable.isUnpaged()
-                        ? unpaginated()
+                        ? Pagination.unpaginated()
                         : new Pagination(pageable.getPageNumber(), pageable.getPageSize()))
                 .sort(sort.isUnsorted()
-                        ? unsorted()
+                        ? Sort.unsorted()
                         : new Sort(sort.stream()
                         .map(order -> new Order(order.getProperty(), order.isAscending()))
                         .toList()));
@@ -50,7 +47,7 @@ class OmniSearchOptionsFactory {
      * @param query  the parsed RSQL query node, may be null
      * @return a configured {@link OmniSearchBaseOptions} instance
      */
-    static OmniSearchBaseOptions create(String search, Node query) {
+    public static OmniSearchBaseOptions create(String search, Node query) {
         return new OmniSearchBaseOptions()
                 .search(search)
                 .query(query);
