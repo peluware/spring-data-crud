@@ -136,7 +136,9 @@ public interface JpaSpecificationReadService<E extends Persistable<ID>, ID, R ex
      * @param operation the current CRUD operation context
      * @return the combined specification
      */
-    Specification<E> combineSpecification(Specification<E> spec, CrudOperation operation);
+    default Specification<E> combineSpecification(Specification<E> spec, CrudOperation operation) {
+        return spec;
+    }
 
     default JpaOmniSearch getOmniSearch() {
         return new JpaOmniSearch(getEntityManager());

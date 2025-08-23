@@ -11,7 +11,7 @@
 
     <groupId>com.peluware</groupId>
     <artifactId>spring-data-crud</artifactId>
-    <version>1.0.0</version>
+    <version>1.0.2</version>
     <packaging>pom</packaging>
     <name>spring-crud</name>
     <description>Generic service-based artifact to automate CRUD operations in Spring applications.</description>

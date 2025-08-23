@@ -1,7 +1,6 @@
 package com.peluware.springframework.crud.jpa;
 
 
-import com.peluware.omnisearch.core.OmniSearch;
 import com.peluware.omnisearch.jpa.JpaOmniSearch;
 import com.peluware.springframework.crud.core.StandardReadService;
 import com.peluware.springframework.crud.jpa.providers.EntityManagerProvider;

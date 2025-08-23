@@ -3,7 +3,6 @@ package com.peluware.springframework.crud.mongo;
 
 import com.peluware.springframework.crud.core.StandardWriteService;
 import org.springframework.data.domain.Persistable;
-import org.springframework.data.mongodb.MongoTransactionManager;
 import org.springframework.data.mongodb.repository.MongoRepository;
 
 /**
@@ -19,9 +18,5 @@ import org.springframework.data.mongodb.repository.MongoRepository;
  * @param <ID> the identifier type of the entity
  * @param <R>  the repository type extending {@link MongoRepository} for the entity
  */
-public interface MongoWriteService<E extends Persistable<ID>, D, ID, R extends MongoRepository<E, ID>> extends
-        StandardWriteService<E, D, ID, R> {
-
-    @Override
-    MongoTransactionManager getTransactionManager();
+public interface MongoWriteService<E extends Persistable<ID>, D, ID, R extends MongoRepository<E, ID>> extends StandardWriteService<E, D, ID, R> {
 }

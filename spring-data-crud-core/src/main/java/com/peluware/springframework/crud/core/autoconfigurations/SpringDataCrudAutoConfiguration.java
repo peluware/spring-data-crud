@@ -4,6 +4,7 @@ import cz.jirutka.rsql.parser.RSQLParser;
 import cz.jirutka.rsql.parser.ast.Node;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.autoconfigure.AutoConfiguration;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.core.convert.converter.Converter;
 
@@ -12,6 +13,7 @@ import org.springframework.core.convert.converter.Converter;
 public class SpringDataCrudAutoConfiguration {
 
     @Bean
+    @ConditionalOnMissingBean
     public Converter<String, Node> rsqlQueryConverter() {
         final var parser = new RSQLParser();
         return source -> {

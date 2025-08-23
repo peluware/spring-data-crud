@@ -1,7 +1,6 @@
 package com.peluware.springframework.crud.mongo;
 
 
-import com.peluware.omnisearch.core.OmniSearch;
 import com.peluware.omnisearch.mongodb.MongoOmniSearch;
 import com.peluware.springframework.crud.core.StandardReadService;
 import com.peluware.springframework.crud.mongo.providers.MongoDatabaseProvider;
@@ -22,6 +21,7 @@ import org.springframework.data.mongodb.repository.MongoRepository;
 public interface MongoReadService<E extends Persistable<ID>, ID, R extends MongoRepository<E, ID>> extends
         StandardReadService<E, ID, R>,
         MongoDatabaseProvider {
+
 
     @Override
     default MongoOmniSearch getOmniSearch() {

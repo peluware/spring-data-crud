@@ -4,8 +4,6 @@ package com.peluware.springframework.crud.jpa;
 import com.peluware.springframework.crud.core.StandardWriteService;
 import org.springframework.data.domain.Persistable;
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.orm.jpa.JpaTransactionManager;
-import org.springframework.transaction.PlatformTransactionManager;
 
 /**
  * Generic write service interface for JPA-based entities.
@@ -20,9 +18,5 @@ import org.springframework.transaction.PlatformTransactionManager;
  * @param <ID> the identifier type of the entity
  * @param <R>  the repository type extending {@link JpaRepository} for the entity
  */
-public interface JpaWriteService<E extends Persistable<ID>, D, ID, R extends JpaRepository<E, ID>> extends
-        StandardWriteService<E, D, ID, R> {
-
-    @Override
-    JpaTransactionManager getTransactionManager();
+public interface JpaWriteService<E extends Persistable<ID>, D, ID, R extends JpaRepository<E, ID>> extends StandardWriteService<E, D, ID, R> {
 }
