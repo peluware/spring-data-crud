@@ -1,9 +1,8 @@
 package com.peluware.springframework.crud.mongo;
 
 
-import com.peluware.omnisearch.mongodb.MongoOmniSearch;
 import com.peluware.springframework.crud.core.StandardReadService;
-import com.peluware.springframework.crud.mongo.providers.MongoDatabaseProvider;
+import com.peluware.springframework.crud.mongo.providers.MongoTemplateProvider;
 import org.springframework.data.domain.Persistable;
 import org.springframework.data.mongodb.repository.MongoRepository;
 
@@ -20,11 +19,11 @@ import org.springframework.data.mongodb.repository.MongoRepository;
  */
 public interface MongoReadService<E extends Persistable<ID>, ID, R extends MongoRepository<E, ID>> extends
         StandardReadService<E, ID, R>,
-        MongoDatabaseProvider {
+        MongoTemplateProvider {
 
 
     @Override
-    default MongoOmniSearch getOmniSearch() {
-        return new MongoOmniSearch(getMongoDatabase());
+    default MongoTemplateOmniSearch getOmniSearch() {
+        return new MongoTemplateOmniSearch(getMongoTemplate());
     }
 }
