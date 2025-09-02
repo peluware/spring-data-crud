@@ -47,7 +47,6 @@ public class MongoTemplateOmniSearch extends MongoOmniSearch {
     }
 
     public <E> Query buildQuery(Class<E> entityClass, OmniSearchOptions options) {
-
         final var query = buildBaseQuery(entityClass, options);
 
         var sort = options.getSort();
@@ -67,7 +66,6 @@ public class MongoTemplateOmniSearch extends MongoOmniSearch {
 
     private @NotNull Query buildBaseQuery(Class<?> entityClass, OmniSearchBaseOptions options) {
         var filter = buildFilter(entityClass, options);
-
         return new Query() {
             @Override
             public @NotNull Document getQueryObject() {
