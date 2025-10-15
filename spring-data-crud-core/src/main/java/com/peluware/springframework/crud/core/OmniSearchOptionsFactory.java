@@ -4,10 +4,11 @@ import com.peluware.domain.Order;
 import com.peluware.domain.Pagination;
 import com.peluware.domain.Sort;
 import cz.jirutka.rsql.parser.ast.Node;
-import com.peluware.omnisearch.core.OmniSearchBaseOptions;
-import com.peluware.omnisearch.core.OmniSearchOptions;
+import com.peluware.omnisearch.OmniSearchBaseOptions;
+import com.peluware.omnisearch.OmniSearchOptions;
 
 import lombok.experimental.UtilityClass;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.data.domain.Pageable;
 
 /**
@@ -32,11 +33,11 @@ public class OmniSearchOptionsFactory {
                 .query(query)
                 .pagination(pageable.isUnpaged()
                         ? Pagination.unpaginated()
-                        : new Pagination(pageable.getPageNumber(), pageable.getPageSize()))
+                        : Pagination.of(pageable.getPageNumber(), pageable.getPageSize()))
                 .sort(sort.isUnsorted()
                         ? Sort.unsorted()
                         : new Sort(sort.stream()
-                        .map(order -> new Order(order.getProperty(), order.isAscending()))
+                        .map(order -> new Order(order.getProperty(), getDirection(order)))
                         .toList()));
     }
 
@@ -51,5 +52,11 @@ public class OmniSearchOptionsFactory {
         return new OmniSearchBaseOptions()
                 .search(search)
                 .query(query);
+    }
+
+    private static Order.@NotNull Direction getDirection(org.springframework.data.domain.Sort.Order order) {
+        return order.isAscending()
+                ? Order.Direction.ASC
+                : Order.Direction.DESC;
     }
 }

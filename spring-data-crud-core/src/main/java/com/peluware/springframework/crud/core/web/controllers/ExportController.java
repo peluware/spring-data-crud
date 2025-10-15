@@ -6,6 +6,7 @@ import com.peluware.springframework.crud.core.web.export.Exporter;
 import com.peluware.springframework.crud.core.ReadService;
 import com.peluware.springframework.crud.core.utils.ResponseEntityUtils;
 import org.springframework.core.io.ByteArrayResource;
+import org.springframework.core.io.InputStreamResource;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.MultiValueMap;
@@ -57,7 +58,7 @@ public interface ExportController<ID, O> {
      * @return a {@link ResponseEntity} containing the export file as a {@link ByteArrayResource}
      */
     @GetMapping("/export")
-    default ResponseEntity<ByteArrayResource> exportPage(
+    default ResponseEntity<InputStreamResource> exportPage(
             @RequestParam(required = false) String search,
             @RequestParam(required = false) Node query,
             @RequestParam(required = false) MultiValueMap<String, String> params,
@@ -68,8 +69,8 @@ public interface ExportController<ID, O> {
         var entities = getService().page(search, pageable, query);
         var exported = getExporter().export(entities, options);
 
-        return ResponseEntityUtils.resource(
-                exported.getByteArray(),
+        return ResponseEntityUtils.intputStream(
+                exported.getInputStream(),
                 exported.getFilename(),
                 exported.getMediaType()
         );
@@ -86,15 +87,15 @@ public interface ExportController<ID, O> {
      * @return a {@link ResponseEntity} containing the export file as a {@link ByteArrayResource}
      */
     @GetMapping("/export/{id}")
-    default ResponseEntity<ByteArrayResource> exportFind(
+    default ResponseEntity<InputStreamResource> exportFind(
             @PathVariable ID id,
             @RequestParam(required = false) MultiValueMap<String, String> params
     ) {
         var options = getExportOptions(params);
         var entity = getService().find(id);
         var exported = getExporter().export(List.of(entity), options);
-        return ResponseEntityUtils.resource(
-                exported.getByteArray(),
+        return ResponseEntityUtils.intputStream(
+                exported.getInputStream(),
                 exported.getFilename(),
                 exported.getMediaType()
         );

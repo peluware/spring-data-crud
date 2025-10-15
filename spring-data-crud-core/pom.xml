@@ -9,14 +9,8 @@
     <parent>
         <groupId>com.peluware</groupId>
         <artifactId>spring-data-crud</artifactId>
-        <version>1.0.8</version>
+        <version>1.0.9</version>
     </parent>
-
-    <properties>
-        <maven.compiler.source>21</maven.compiler.source>
-        <maven.compiler.target>21</maven.compiler.target>
-        <java.version>21</java.version>
-    </properties>
 
     <dependencies>
 
@@ -70,7 +64,7 @@
 
         <dependency>
             <groupId>org.springdoc</groupId>
-            <artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>
+            <artifactId>springdoc-openapi-starter-webmvc-api</artifactId>
             <scope>provided</scope>
         </dependency>
 

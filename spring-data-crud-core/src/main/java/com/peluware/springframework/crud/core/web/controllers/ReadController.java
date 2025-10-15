@@ -23,7 +23,6 @@ import java.util.List;
  *
  * @param <M>  Entity model, which extends {@link Persistable} with an ID type of {@code ID}
  * @param <ID> Type of the entity's identifier (e.g., {@link Long}, {@link String})
- * @param <S>  Service that extends {@link ReadService} for the read operations
  */
 public interface ReadController<M extends Persistable<ID>, ID> {
 

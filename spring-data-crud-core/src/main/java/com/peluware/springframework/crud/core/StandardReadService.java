@@ -1,8 +1,8 @@
 package com.peluware.springframework.crud.core;
 
 import com.peluware.omnisearch.core.OmniSearch;
-import com.peluware.omnisearch.core.OmniSearchBaseOptions;
-import com.peluware.omnisearch.core.OmniSearchOptions;
+import com.peluware.omnisearch.OmniSearchBaseOptions;
+import com.peluware.omnisearch.OmniSearchOptions;
 import com.peluware.springframework.crud.core.exceptions.NotFoundEntityException;
 import com.peluware.springframework.crud.core.providers.EntityClassProvider;
 import com.peluware.springframework.crud.core.providers.RepositoryProvider;

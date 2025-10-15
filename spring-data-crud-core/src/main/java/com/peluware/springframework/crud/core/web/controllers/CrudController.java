@@ -13,7 +13,6 @@ import org.springframework.data.domain.Persistable;
  * @param <M>  Entity model, which extends {@link Persistable} with an ID type of {@code ID}
  * @param <D>  DTO (Data Transfer Object) used to transfer data for create and update operations
  * @param <ID> Type of the entity's identifier (e.g., {@link Long}, {@link String})
- * @param <S>  Service that extends {@link CrudService} for the CRUD operations
  */
 public interface CrudController<M extends Persistable<ID>, D, ID> extends
         WriteController<M, D, ID>,

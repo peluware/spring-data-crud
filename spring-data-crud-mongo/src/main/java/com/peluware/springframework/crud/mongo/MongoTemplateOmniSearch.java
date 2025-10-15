@@ -1,7 +1,8 @@
 package com.peluware.springframework.crud.mongo;
 
-import com.peluware.omnisearch.core.OmniSearchBaseOptions;
-import com.peluware.omnisearch.core.OmniSearchOptions;
+import com.peluware.domain.Order;
+import com.peluware.omnisearch.OmniSearchBaseOptions;
+import com.peluware.omnisearch.OmniSearchOptions;
 import com.peluware.omnisearch.mongodb.MongoOmniSearch;
 import com.peluware.omnisearch.mongodb.rsql.RsqlMongoBuilderOptions;
 import org.bson.BsonDocument;
@@ -57,8 +58,8 @@ public class MongoTemplateOmniSearch extends MongoOmniSearch {
         var pagination = options.getPagination();
         if (pagination.isPaginated()) {
             query
-                    .limit(pagination.size())
-                    .skip(pagination.offset());
+                    .limit(pagination.getSize())
+                    .skip(pagination.getOffset());
         }
 
         return query;
@@ -79,7 +80,7 @@ public class MongoTemplateOmniSearch extends MongoOmniSearch {
     }
 
     private static Sort buildSort(com.peluware.domain.Sort sort) {
-        return Sort.by(sort.orders().stream().map(o -> o.ascending() ?
+        return Sort.by(sort.orders().stream().map(o -> o.direction() == Order.Direction.ASC ?
                 Sort.Order.asc(o.property()) :
                 Sort.Order.desc(o.property())
         ).toList());

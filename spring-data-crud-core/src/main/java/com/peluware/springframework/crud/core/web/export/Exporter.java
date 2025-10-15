@@ -5,6 +5,8 @@ import org.springframework.core.io.ByteArrayResource;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 
+import java.io.InputStream;
+
 /**
  * Interface for exporting data to a specified format (e.g., CSV, Excel, PDF).
  * <p>
@@ -36,16 +38,16 @@ public interface Exporter<O> {
 
         private final String filename;
         private final MediaType mediaType;
-        private final byte[] byteArray;
+        private final InputStream inputStream;
 
-        public ExportResource(byte[] byteArray, String filename, MediaType mediaType) {
-            this.byteArray = byteArray;
+        public ExportResource(InputStream inputStream, String filename, MediaType mediaType) {
+            this.inputStream = inputStream;
             this.filename = filename;
             this.mediaType = mediaType;
         }
 
-        public ExportResource(byte[] byteArray, String filename) {
-            this(byteArray, filename, MediaType.APPLICATION_OCTET_STREAM);
+        public ExportResource(InputStream inputStream, String filename) {
+            this(inputStream, filename, MediaType.APPLICATION_OCTET_STREAM);
         }
     }
 }

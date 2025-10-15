@@ -1,17 +1,21 @@
 package com.peluware.springframework.crud.jpa;
 
 
-import com.peluware.omnisearch.jpa.JpaOmniSearch;
+import com.peluware.omnisearch.jpa.JpaContext;
+import com.peluware.omnisearch.jpa.JpaOmniSearchPredicateBuilder;
+import com.peluware.omnisearch.jpa.rsql.RsqlJpaBuilderOptions;
 import com.peluware.springframework.crud.core.OmniSearchOptionsFactory;
 import cz.jirutka.rsql.parser.ast.Node;
-import com.peluware.omnisearch.core.OmniSearchBaseOptions;
-import com.peluware.omnisearch.core.OmniSearchOptions;
+import com.peluware.omnisearch.OmniSearchBaseOptions;
+import com.peluware.omnisearch.OmniSearchOptions;
 import com.peluware.springframework.crud.core.CrudOperation;
 import com.peluware.springframework.crud.core.providers.EntityClassProvider;
 import com.peluware.springframework.crud.core.providers.RepositoryProvider;
 import com.peluware.springframework.crud.core.exceptions.NotFoundEntityException;
 import com.peluware.springframework.crud.core.ReadService;
 import com.peluware.springframework.crud.jpa.providers.EntityManagerProvider;
+import jakarta.persistence.criteria.Predicate;
+import jakarta.persistence.criteria.Root;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Persistable;
@@ -66,7 +70,7 @@ public interface JpaSpecificationReadService<E extends Persistable<ID>, ID, R ex
     @Override
     default Page<E> internalSearch(String search, Pageable pageable, Node query) {
         var options = toSearchOptions(search, pageable, query);
-        Specification<E> spec = (root, q, cb) -> getOmniSearch().buildPredicate(root, cb, options);
+        Specification<E> spec = (root, q, cb) -> buildPredicate(options, root);
         return getRepository().findAll(combineSpecification(spec, CrudOperation.PAGE), pageable);
     }
 
@@ -111,7 +115,7 @@ public interface JpaSpecificationReadService<E extends Persistable<ID>, ID, R ex
     @Override
     default long internalCount(String search, Node query) {
         var options = toBaseSearchOptions(search, query);
-        Specification<E> spec = (root, q, cb) -> getOmniSearch().buildPredicate(root, cb, options);
+        Specification<E> spec = (root, q, cb) -> buildPredicate(options, root);
         return getRepository().count(combineSpecification(spec, CrudOperation.COUNT));
     }
 
@@ -128,7 +132,6 @@ public interface JpaSpecificationReadService<E extends Persistable<ID>, ID, R ex
         return "id";
     }
 
-
     /**
      * Combines the given {@link Specification} with additional criteria based on the operation.
      *
@@ -140,8 +143,22 @@ public interface JpaSpecificationReadService<E extends Persistable<ID>, ID, R ex
         return spec;
     }
 
-    default JpaOmniSearch getOmniSearch() {
-        return new JpaOmniSearch(getEntityManager());
+    /**
+     * Builds a JPA {@link Predicate} from the given {@link OmniSearchBaseOptions} and JPA {@link Root}.
+     * This method uses the default {@link JpaOmniSearchPredicateBuilder} to create the predicate from OmniSearch Library.
+     * This can be overridden to customize predicate building logic.
+     *
+     * @param options the search options containing filters and criteria
+     * @param root   the JPA root entity for building the predicate
+     * @return the constructed JPA predicate
+     */
+    default Predicate buildPredicate(OmniSearchBaseOptions options, Root<E> root) {
+        return JpaOmniSearchPredicateBuilder.DEFAULT.buildPredicate(
+                JpaContext.of(getEntityManager()),
+                root,
+                options,
+                RsqlJpaBuilderOptions.DEFAULT
+        );
     }
 
     default OmniSearchOptions toSearchOptions(String search, Pageable pageable, Node query) {
