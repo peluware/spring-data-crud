@@ -6,6 +6,6 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 @Getter
 public class NotFoundEntityException extends RuntimeException {
-    private final Class<?> modelClass;
+    private final Class<?> entityClass;
     private final transient Object id;
 }

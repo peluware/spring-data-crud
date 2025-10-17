@@ -11,7 +11,7 @@
 
     <groupId>com.peluware</groupId>
     <artifactId>spring-data-crud</artifactId>
-    <version>1.0.9</version>
+    <version>1.1.0</version>
     <packaging>pom</packaging>
     <name>spring-crud</name>
     <description>Generic service-based artifact to automate CRUD operations in Spring applications.</description>
@@ -51,7 +51,7 @@
         <java.version>21</java.version>
         <encoding.default>UTF-8</encoding.default>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <com.peluware.omnisearch.version>1.1.0</com.peluware.omnisearch.version>
+        <com.peluware.omnisearch.version>2.0.0</com.peluware.omnisearch.version>
     </properties>
 
     <dependencies>

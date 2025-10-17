@@ -30,16 +30,16 @@ public interface StandardWriteService<
      * {@inheritDoc}
      */
     @Override
-    default void internalCreate(E entity) {
-        getRepository().save(entity);
+    default E internalCreate(E entity) {
+        return getRepository().save(entity);
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    default void internalUpdate(E entity) {
-        getRepository().save(entity);
+    default E internalUpdate(E entity) {
+        return getRepository().save(entity);
     }
 
     /**

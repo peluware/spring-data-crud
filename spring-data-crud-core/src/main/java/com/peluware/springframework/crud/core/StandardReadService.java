@@ -1,6 +1,6 @@
 package com.peluware.springframework.crud.core;
 
-import com.peluware.omnisearch.core.OmniSearch;
+import com.peluware.omnisearch.OmniSearch;
 import com.peluware.omnisearch.OmniSearchBaseOptions;
 import com.peluware.omnisearch.OmniSearchOptions;
 import com.peluware.springframework.crud.core.exceptions.NotFoundEntityException;
@@ -94,7 +94,7 @@ public interface StandardReadService<
         var entityClass = getEntityClass();
         var omniSearch = getOmniSearch();
         return PageableExecutionUtils.getPage(
-                omniSearch.search(entityClass, options),
+                omniSearch.list(entityClass, options),
                 pageable,
                 () -> omniSearch.count(entityClass, options)
         );

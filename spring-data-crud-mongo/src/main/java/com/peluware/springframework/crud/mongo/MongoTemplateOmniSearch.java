@@ -30,7 +30,7 @@ public class MongoTemplateOmniSearch extends MongoOmniSearch {
     }
 
     @Override
-    public <E> List<E> search(Class<E> entityClass, OmniSearchOptions options) {
+    public <E> List<E> list(Class<E> entityClass, OmniSearchOptions options) {
         Objects.requireNonNull(entityClass, "Entity class cannot be null");
         Objects.requireNonNull(options, "Options cannot be null");
 

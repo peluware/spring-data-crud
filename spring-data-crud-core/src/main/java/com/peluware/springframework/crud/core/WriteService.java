@@ -46,17 +46,17 @@ public non-sealed interface WriteService<E extends Persistable<ID>, D, ID> exten
     default E create(@Valid @NotNull D dto) {
         Crud.preProccess(this, CrudOperation.CREATE);
 
-        var entity = newEntity();
         var hooks = getHooks();
         var transactionOperations = getTransactionOperations();
 
         return transactionOperations.execute(status -> {
             try {
+                var entity = newEntity();
                 mapModel(dto, entity);
                 hooks.onBeforeCreate(dto, entity);
-                internalCreate(entity);
-                hooks.onAfterCreate(dto, entity);
-                return entity;
+                var created = internalCreate(entity);
+                hooks.onAfterCreate(dto, created);
+                return created;
             } catch (Exception e) {
                 status.setRollbackOnly();
                 throw e;
@@ -76,17 +76,17 @@ public non-sealed interface WriteService<E extends Persistable<ID>, D, ID> exten
     default E update(@NotNull ID id, @Valid @NotNull D dto) throws NotFoundEntityException {
         Crud.preProccess(this, CrudOperation.UPDATE);
 
-        var entity = internalFind(id);
         var hooks = getHooks();
         var transactionOperations = getTransactionOperations();
 
         return transactionOperations.execute(status -> {
             try {
+                var entity = internalFind(id);
                 mapModel(dto, entity);
                 hooks.onBeforeUpdate(dto, entity);
-                internalUpdate(entity);
-                hooks.onAfterUpdate(dto, entity);
-                return entity;
+                var update = internalUpdate(entity);
+                hooks.onAfterUpdate(dto, update);
+                return update;
             } catch (Exception e) {
                 status.setRollbackOnly();
                 throw e;
@@ -148,14 +148,14 @@ public non-sealed interface WriteService<E extends Persistable<ID>, D, ID> exten
      *
      * @param entity the entity to create
      */
-    void internalCreate(E entity);
+    E internalCreate(E entity);
 
     /**
      * Updates an existing entity in the data store.
      *
      * @param entity the entity to update
      */
-    void internalUpdate(E entity);
+    E internalUpdate(E entity);
 
     /**
      * Deletes an existing entity from the data store.
