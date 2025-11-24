@@ -7,6 +7,7 @@ import com.peluware.springframework.crud.core.hooks.WriteHooks;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 import lombok.SneakyThrows;
+import org.jspecify.annotations.NonNull;
 import org.springframework.data.domain.Persistable;
 import org.springframework.validation.annotation.Validated;
 
@@ -21,7 +22,7 @@ import org.springframework.validation.annotation.Validated;
  * @param <ID> the identifier type of the entity
  */
 @Validated
-public non-sealed interface WriteService<E extends Persistable<ID>, D, ID> extends
+public non-sealed interface WriteService<E extends Persistable<@NonNull ID>, D, ID> extends
         Crud,
         EntityClassProvider<E>,
         TransactionOperationsProvider {

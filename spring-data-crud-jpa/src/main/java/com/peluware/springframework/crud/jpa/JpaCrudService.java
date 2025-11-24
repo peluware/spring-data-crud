@@ -2,6 +2,7 @@ package com.peluware.springframework.crud.jpa;
 
 
 import com.peluware.springframework.crud.core.StandardCrudService;
+import org.jspecify.annotations.NonNull;
 import org.springframework.data.domain.Persistable;
 import org.springframework.data.jpa.repository.JpaRepository;
 
@@ -15,7 +16,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
  * @param <ID> the identifier type of the entity
  * @param <R>  the Spring Data JPA repository type for the entity
  */
-public interface JpaCrudService<E extends Persistable<ID>, D, ID, R extends JpaRepository<E, ID>> extends
+public interface JpaCrudService<E extends Persistable<@NonNull ID>, D, ID, R extends JpaRepository<@NonNull E, @NonNull ID>> extends
         JpaReadService<E, ID, R>,
         JpaWriteService<E, D, ID, R>,
         StandardCrudService<E, D, ID, R> {

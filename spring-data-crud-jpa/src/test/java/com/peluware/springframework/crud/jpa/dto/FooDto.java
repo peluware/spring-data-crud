@@ -1,8 +1,8 @@
 package com.peluware.springframework.crud.jpa.dto;
 
 import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotNull;
 import lombok.Data;
-import org.jetbrains.annotations.NotNull;
 
 import java.time.LocalDate;
 

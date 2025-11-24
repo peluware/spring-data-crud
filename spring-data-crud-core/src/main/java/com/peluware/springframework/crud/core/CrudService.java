@@ -1,6 +1,7 @@
 package com.peluware.springframework.crud.core;
 
 import com.peluware.springframework.crud.core.hooks.CrudHooks;
+import org.jspecify.annotations.NonNull;
 import org.springframework.data.domain.Persistable;
 
 /**
@@ -16,7 +17,7 @@ import org.springframework.data.domain.Persistable;
  *
  * @author Luis Vasquez
  */
-public non-sealed interface CrudService<E extends Persistable<ID>, D, ID> extends
+public non-sealed interface CrudService<E extends Persistable<@NonNull ID>, D, ID> extends
         Crud,
         ReadService<E, ID>,
         WriteService<E, D, ID> {

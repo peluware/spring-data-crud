@@ -1,6 +1,7 @@
 package com.peluware.springframework.crud.core.utils;
 
 import lombok.experimental.UtilityClass;
+import org.jspecify.annotations.NonNull;
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -17,7 +18,7 @@ import static org.springframework.http.HttpHeaders.CONTENT_DISPOSITION;
 @UtilityClass
 public final class ResponseEntityUtils {
 
-    public static ResponseEntity<InputStreamResource> intputStream(InputStream content, String filename, MediaType mediaType, boolean inline) {
+    public static ResponseEntity<@NonNull InputStreamResource> intputStream(InputStream content, String filename, MediaType mediaType, boolean inline) {
         return ResponseEntity
                 .status(HttpStatus.OK)
                 .contentType(mediaType)
@@ -25,7 +26,7 @@ public final class ResponseEntityUtils {
                 .body(new InputStreamResource(content));
     }
 
-    public static ResponseEntity<InputStreamResource> intputStream(InputStream content, String filename, MediaType mediaType) {
+    public static ResponseEntity<@NonNull InputStreamResource> intputStream(InputStream content, String filename, MediaType mediaType) {
         return intputStream(content, filename, mediaType, false);
     }
 

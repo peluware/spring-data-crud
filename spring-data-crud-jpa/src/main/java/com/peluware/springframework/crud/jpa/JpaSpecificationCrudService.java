@@ -3,6 +3,7 @@ package com.peluware.springframework.crud.jpa;
 
 import com.peluware.springframework.crud.core.exceptions.NotFoundEntityException;
 import com.peluware.springframework.crud.core.CrudService;
+import org.jspecify.annotations.NonNull;
 import org.springframework.data.domain.Persistable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
@@ -16,7 +17,7 @@ import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
  * @param <ID> Type of the entity identifier
  * @param <R>  JPA repository extending {@link JpaRepository} and {@link JpaSpecificationExecutor}
  */
-public interface JpaSpecificationCrudService<E extends Persistable<ID>, D, ID, R extends JpaRepository<E, ID> & JpaSpecificationExecutor<E>> extends
+public interface JpaSpecificationCrudService<E extends Persistable<@NonNull ID>, D, ID, R extends JpaRepository<@NonNull E, @NonNull ID> & JpaSpecificationExecutor<@NonNull E>> extends
         JpaWriteService<E, D, ID, R>,
         JpaSpecificationReadService<E, ID, R>,
         CrudService<E, D, ID> {

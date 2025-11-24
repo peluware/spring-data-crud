@@ -2,6 +2,7 @@ package com.peluware.springframework.crud.jpa;
 
 
 import com.peluware.springframework.crud.core.StandardWriteService;
+import org.jspecify.annotations.NonNull;
 import org.springframework.data.domain.Persistable;
 import org.springframework.data.jpa.repository.JpaRepository;
 
@@ -18,5 +19,5 @@ import org.springframework.data.jpa.repository.JpaRepository;
  * @param <ID> the identifier type of the entity
  * @param <R>  the repository type extending {@link JpaRepository} for the entity
  */
-public interface JpaWriteService<E extends Persistable<ID>, D, ID, R extends JpaRepository<E, ID>> extends StandardWriteService<E, D, ID, R> {
+public interface JpaWriteService<E extends Persistable<@NonNull ID>, D, ID, R extends JpaRepository<@NonNull E, @NonNull ID>> extends StandardWriteService<E, D, ID, R> {
 }

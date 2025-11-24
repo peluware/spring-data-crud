@@ -1,11 +1,10 @@
 package com.peluware.springframework.crud.jpa;
 
 
+import com.peluware.omnisearch.jpa.DefaultJpaOmniSearchPredicateBuilder;
 import com.peluware.omnisearch.jpa.JpaContext;
 import com.peluware.omnisearch.jpa.JpaOmniSearchPredicateBuilder;
-import com.peluware.omnisearch.jpa.rsql.RsqlJpaBuilderOptions;
 import com.peluware.springframework.crud.core.OmniSearchOptionsFactory;
-import cz.jirutka.rsql.parser.ast.Node;
 import com.peluware.omnisearch.OmniSearchBaseOptions;
 import com.peluware.omnisearch.OmniSearchOptions;
 import com.peluware.springframework.crud.core.CrudOperation;
@@ -16,6 +15,7 @@ import com.peluware.springframework.crud.core.ReadService;
 import com.peluware.springframework.crud.jpa.providers.EntityManagerProvider;
 import jakarta.persistence.criteria.Predicate;
 import jakarta.persistence.criteria.Root;
+import org.jspecify.annotations.NonNull;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Persistable;
@@ -41,7 +41,7 @@ import java.util.List;
  * @param <R>  the Spring Data JPA repository, must implement {@link JpaSpecificationExecutor}
  */
 
-public interface JpaSpecificationReadService<E extends Persistable<ID>, ID, R extends JpaSpecificationExecutor<E>> extends
+public interface JpaSpecificationReadService<E extends Persistable<@NonNull ID>, ID, R extends JpaSpecificationExecutor<@NonNull E>> extends
         ReadService<E, ID>,
         RepositoryProvider<R>,
         EntityManagerProvider,
@@ -51,8 +51,8 @@ public interface JpaSpecificationReadService<E extends Persistable<ID>, ID, R ex
      * {@inheritDoc}
      */
     @Override
-    default Page<E> internalPage(Pageable pageable) {
-        Specification<E> spec = (root, query, cb) -> null;
+    default Page<@NonNull E> internalPage(Pageable pageable) {
+        Specification<@NonNull E> spec = (root, query, cb) -> null;
         return getRepository().findAll(combineSpecification(spec, CrudOperation.PAGE), pageable);
     }
 
@@ -60,7 +60,7 @@ public interface JpaSpecificationReadService<E extends Persistable<ID>, ID, R ex
      * {@inheritDoc}
      */
     @Override
-    default Page<E> internalSearch(String search, Pageable pageable) {
+    default Page<@NonNull E> internalSearch(String search, Pageable pageable) {
         return internalSearch(search, pageable, null);
     }
 
@@ -68,9 +68,9 @@ public interface JpaSpecificationReadService<E extends Persistable<ID>, ID, R ex
      * {@inheritDoc}
      */
     @Override
-    default Page<E> internalSearch(String search, Pageable pageable, Node query) {
+    default Page<@NonNull E> internalSearch(String search, Pageable pageable, String query) {
         var options = toSearchOptions(search, pageable, query);
-        Specification<E> spec = (root, q, cb) -> buildPredicate(options, root);
+        Specification<@NonNull E> spec = (root, q, cb) -> buildPredicate(options, root);
         return getRepository().findAll(combineSpecification(spec, CrudOperation.PAGE), pageable);
     }
 
@@ -79,7 +79,7 @@ public interface JpaSpecificationReadService<E extends Persistable<ID>, ID, R ex
      */
     @Override
     default E internalFind(ID id) {
-        Specification<E> spec = (root, query, cb) -> cb.equal(root.get(getIdFieldName()), id);
+        Specification<@NonNull E> spec = (root, query, cb) -> cb.equal(root.get(getIdFieldName()), id);
         return getRepository().findOne(combineSpecification(spec, CrudOperation.FIND)).orElseThrow(() -> new NotFoundEntityException(getEntityClass(), id));
     }
 
@@ -88,7 +88,7 @@ public interface JpaSpecificationReadService<E extends Persistable<ID>, ID, R ex
      */
     @Override
     default List<E> internalFind(List<ID> ids) {
-        Specification<E> spec = (root, query, cb) -> root.get(getIdFieldName()).in(ids);
+        Specification<@NonNull E> spec = (root, query, cb) -> root.get(getIdFieldName()).in(ids);
         return getRepository().findAll(combineSpecification(spec, CrudOperation.FIND));
     }
 
@@ -97,7 +97,7 @@ public interface JpaSpecificationReadService<E extends Persistable<ID>, ID, R ex
      */
     @Override
     default long internalCount() {
-        Specification<E> spec = (root, query, cb) -> null;
+        Specification<@NonNull E> spec = (root, query, cb) -> null;
         return getRepository().count(combineSpecification(spec, CrudOperation.COUNT));
     }
 
@@ -113,9 +113,9 @@ public interface JpaSpecificationReadService<E extends Persistable<ID>, ID, R ex
      * {@inheritDoc}
      */
     @Override
-    default long internalCount(String search, Node query) {
+    default long internalCount(String search, String query) {
         var options = toBaseSearchOptions(search, query);
-        Specification<E> spec = (root, q, cb) -> buildPredicate(options, root);
+        Specification<@NonNull E> spec = (root, q, cb) -> buildPredicate(options, root);
         return getRepository().count(combineSpecification(spec, CrudOperation.COUNT));
     }
 
@@ -124,7 +124,7 @@ public interface JpaSpecificationReadService<E extends Persistable<ID>, ID, R ex
      */
     @Override
     default boolean internalExists(ID id) {
-        Specification<E> spec = (root, query, cb) -> cb.equal(root.get(getIdFieldName()), id);
+        Specification<@NonNull E> spec = (root, query, cb) -> cb.equal(root.get(getIdFieldName()), id);
         return getRepository().exists(combineSpecification(spec, CrudOperation.EXISTS));
     }
 
@@ -139,7 +139,7 @@ public interface JpaSpecificationReadService<E extends Persistable<ID>, ID, R ex
      * @param operation the current CRUD operation context
      * @return the combined specification
      */
-    default Specification<E> combineSpecification(Specification<E> spec, CrudOperation operation) {
+    default Specification<@NonNull E> combineSpecification(Specification<@NonNull E> spec, CrudOperation operation) {
         return spec;
     }
 
@@ -149,23 +149,22 @@ public interface JpaSpecificationReadService<E extends Persistable<ID>, ID, R ex
      * This can be overridden to customize predicate building logic.
      *
      * @param options the search options containing filters and criteria
-     * @param root   the JPA root entity for building the predicate
+     * @param root    the JPA root entity for building the predicate
      * @return the constructed JPA predicate
      */
     default Predicate buildPredicate(OmniSearchBaseOptions options, Root<E> root) {
-        return JpaOmniSearchPredicateBuilder.DEFAULT.buildPredicate(
+        return new DefaultJpaOmniSearchPredicateBuilder().buildPredicate(
                 JpaContext.of(getEntityManager()),
                 root,
-                options,
-                RsqlJpaBuilderOptions.DEFAULT
+                options
         );
     }
 
-    default OmniSearchOptions toSearchOptions(String search, Pageable pageable, Node query) {
+    default OmniSearchOptions toSearchOptions(String search, Pageable pageable, String query) {
         return OmniSearchOptionsFactory.create(search, pageable, query);
     }
 
-    default OmniSearchBaseOptions toBaseSearchOptions(String search, Node query) {
+    default OmniSearchBaseOptions toBaseSearchOptions(String search, String query) {
         return OmniSearchOptionsFactory.create(search, query);
     }
 }

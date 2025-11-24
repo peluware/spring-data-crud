@@ -1,6 +1,7 @@
 package com.peluware.springframework.crud.core.web.controllers;
 
 import com.peluware.springframework.crud.core.CrudService;
+import org.jspecify.annotations.NonNull;
 import org.springframework.data.domain.Persistable;
 
 /**
@@ -14,7 +15,7 @@ import org.springframework.data.domain.Persistable;
  * @param <D>  DTO (Data Transfer Object) used to transfer data for create and update operations
  * @param <ID> Type of the entity's identifier (e.g., {@link Long}, {@link String})
  */
-public interface CrudController<M extends Persistable<ID>, D, ID> extends
+public interface CrudController<M extends Persistable<@NonNull ID>, D, ID> extends
         WriteController<M, D, ID>,
         ReadController<M, ID> {
 

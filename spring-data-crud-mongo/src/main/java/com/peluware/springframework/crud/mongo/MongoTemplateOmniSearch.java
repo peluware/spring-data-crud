@@ -1,13 +1,14 @@
 package com.peluware.springframework.crud.mongo;
 
 import com.peluware.domain.Order;
+import com.peluware.omnisearch.OmniSearch;
 import com.peluware.omnisearch.OmniSearchBaseOptions;
 import com.peluware.omnisearch.OmniSearchOptions;
-import com.peluware.omnisearch.mongodb.MongoOmniSearch;
-import com.peluware.omnisearch.mongodb.rsql.RsqlMongoBuilderOptions;
+import com.peluware.omnisearch.mongodb.DefaultMongoOmniSearchFilterBuilder;
+import com.peluware.omnisearch.mongodb.MongoOmniSearchFilterBuilder;
 import org.bson.BsonDocument;
 import org.bson.Document;
-import org.jetbrains.annotations.NotNull;
+import org.jspecify.annotations.NonNull;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Query;
@@ -15,18 +16,14 @@ import org.springframework.data.mongodb.core.query.Query;
 import java.util.List;
 import java.util.Objects;
 
-public class MongoTemplateOmniSearch extends MongoOmniSearch {
+public class MongoTemplateOmniSearch implements OmniSearch {
 
     private final MongoTemplate mongoTemplate;
-
-    public MongoTemplateOmniSearch(MongoTemplate mongoTemplate, RsqlMongoBuilderOptions rsqlBuilderOptions) {
-        super(null, rsqlBuilderOptions);
-        this.mongoTemplate = mongoTemplate;
-    }
+    private final MongoOmniSearchFilterBuilder filterBuilder;
 
     public MongoTemplateOmniSearch(MongoTemplate mongoTemplate) {
-        super(null);
         this.mongoTemplate = mongoTemplate;
+        this.filterBuilder = new DefaultMongoOmniSearchFilterBuilder();
     }
 
     @Override
@@ -65,11 +62,11 @@ public class MongoTemplateOmniSearch extends MongoOmniSearch {
         return query;
     }
 
-    private @NotNull Query buildBaseQuery(Class<?> entityClass, OmniSearchBaseOptions options) {
-        var filter = buildFilter(entityClass, options);
+    private @NonNull Query buildBaseQuery(Class<?> entityClass, OmniSearchBaseOptions options) {
+        var filter = filterBuilder.buildFilter(entityClass, options);
         return new Query() {
             @Override
-            public @NotNull Document getQueryObject() {
+            public @NonNull Document getQueryObject() {
                 var bsonDoc = filter.toBsonDocument(
                         BsonDocument.class,
                         mongoTemplate.getConverter().getCodecRegistry()

@@ -1,14 +1,14 @@
 package com.peluware.springframework.crud.core.utils;
 
 import lombok.experimental.UtilityClass;
-import org.jetbrains.annotations.NotNull;
+import org.jspecify.annotations.NonNull;
 
 import java.text.Normalizer;
 
 @UtilityClass
 public final class StringUtils {
 
-    public static @NotNull String toASCII(@NotNull String string) {
+    public static @NonNull String toASCII(@NonNull String string) {
         try {
             var normalizedString = Normalizer.normalize(string, Normalizer.Form.NFD);
             return normalizedString

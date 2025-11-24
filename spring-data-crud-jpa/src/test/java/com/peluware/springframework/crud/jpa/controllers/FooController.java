@@ -8,6 +8,7 @@ import com.peluware.springframework.crud.core.web.controllers.CrudController;
 import com.peluware.springframework.crud.jpa.services.FooService;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
+import org.jspecify.annotations.NonNull;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -26,7 +27,7 @@ public class FooController implements CrudController<Foo, FooDto, Long>, ExportC
     }
 
     @Override
-    public Object getExportOptions(MultiValueMap<String, String> params) {
+    public Object getExportOptions(MultiValueMap<@NonNull String, String> params) {
         return null;
     }
 }

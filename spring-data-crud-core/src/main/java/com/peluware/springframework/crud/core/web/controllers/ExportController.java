@@ -1,10 +1,10 @@
 package com.peluware.springframework.crud.core.web.controllers;
 
 
-import cz.jirutka.rsql.parser.ast.Node;
 import com.peluware.springframework.crud.core.web.export.Exporter;
 import com.peluware.springframework.crud.core.ReadService;
 import com.peluware.springframework.crud.core.utils.ResponseEntityUtils;
+import org.jspecify.annotations.NonNull;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.data.domain.Pageable;
@@ -43,7 +43,7 @@ public interface ExportController<ID, O> {
      * @param params the parameters that may include fields, titles, and other options for the export
      * @return the export options configured for the exporter
      */
-    O getExportOptions(MultiValueMap<String, String> params);
+    O getExportOptions(MultiValueMap<@NonNull String, String> params);
 
     /**
      * Endpoint to export a page of data
@@ -58,10 +58,10 @@ public interface ExportController<ID, O> {
      * @return a {@link ResponseEntity} containing the export file as a {@link ByteArrayResource}
      */
     @GetMapping("/export")
-    default ResponseEntity<InputStreamResource> exportPage(
+    default ResponseEntity<@NonNull InputStreamResource> exportPage(
             @RequestParam(required = false) String search,
-            @RequestParam(required = false) Node query,
-            @RequestParam(required = false) MultiValueMap<String, String> params,
+            @RequestParam(required = false) String query,
+            @RequestParam(required = false) MultiValueMap<@NonNull String, String> params,
             Pageable pageable
     ) {
 
@@ -87,9 +87,9 @@ public interface ExportController<ID, O> {
      * @return a {@link ResponseEntity} containing the export file as a {@link ByteArrayResource}
      */
     @GetMapping("/export/{id}")
-    default ResponseEntity<InputStreamResource> exportFind(
+    default ResponseEntity<@NonNull InputStreamResource> exportFind(
             @PathVariable ID id,
-            @RequestParam(required = false) MultiValueMap<String, String> params
+            @RequestParam(required = false) MultiValueMap<@NonNull String, String> params
     ) {
         var options = getExportOptions(params);
         var entity = getService().find(id);

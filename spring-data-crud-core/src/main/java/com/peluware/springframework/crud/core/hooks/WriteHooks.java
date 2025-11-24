@@ -1,5 +1,6 @@
 package com.peluware.springframework.crud.core.hooks;
 
+import org.jspecify.annotations.NonNull;
 import org.springframework.data.domain.Persistable;
 
 /**
@@ -14,7 +15,7 @@ import org.springframework.data.domain.Persistable;
  * @param <D>  DTO (Data Transfer Object) used for input during write operations.
  * @param <ID> The type of the entity's identifier.
  */
-public interface WriteHooks<E extends Persistable<ID>, D, ID> {
+public interface WriteHooks<E extends Persistable<@NonNull ID>, D, ID> {
 
     /**
      * Default implementation of the {@link WriteHooks} interface.
@@ -37,7 +38,7 @@ public interface WriteHooks<E extends Persistable<ID>, D, ID> {
      * @return The default {@link WriteHooks} instance.
      */
     @SuppressWarnings("unchecked")
-    static <E extends Persistable<ID>, D, ID> WriteHooks<E, D, ID> getDefault() {
+    static <E extends Persistable<@NonNull ID>, D, ID> WriteHooks<E, D, ID> getDefault() {
         return (WriteHooks<E, D, ID>) DEFAULT;
     }
 

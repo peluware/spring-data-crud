@@ -1,9 +1,9 @@
 package com.peluware.springframework.crud.core;
 
-import cz.jirutka.rsql.parser.ast.Node;
 import com.peluware.springframework.crud.core.exceptions.NotFoundEntityException;
 import com.peluware.springframework.crud.core.hooks.ReadHooks;
 import com.peluware.springframework.crud.core.utils.StringUtils;
+import org.jspecify.annotations.NonNull;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Persistable;
@@ -22,7 +22,7 @@ import java.util.List;
  * @param <ID> the ID type of the entity
  */
 @Validated
-public non-sealed interface ReadService<E extends Persistable<ID>, ID> extends Crud {
+public non-sealed interface ReadService<E extends Persistable<@NonNull ID>, ID> extends Crud {
 
     /**
      * Returns the hooks associated with this read service. Can be overridden to customize hook behavior.
@@ -41,7 +41,7 @@ public non-sealed interface ReadService<E extends Persistable<ID>, ID> extends C
      * @param query    optional parsed RSQL query node
      * @return a page of entities matching the criteria
      */
-    default Page<E> page(String search, Pageable pageable, Node query) {
+    default Page<@NonNull E> page(String search, Pageable pageable, String query) {
         Crud.preProccess(this, CrudOperation.PAGE);
 
         var normalized = StringUtils.normalize(search);
@@ -92,7 +92,7 @@ public non-sealed interface ReadService<E extends Persistable<ID>, ID> extends C
      * @param query  optional RSQL query node
      * @return the total count of matching entities
      */
-    default long count(String search, Node query) {
+    default long count(String search, String query) {
         Crud.preProccess(this, CrudOperation.COUNT);
 
         var count = resolveCount(search, query);
@@ -126,7 +126,7 @@ public non-sealed interface ReadService<E extends Persistable<ID>, ID> extends C
      * @param pageable pagination information
      * @return a page of entities
      */
-    Page<E> internalPage(Pageable pageable);
+    Page<@NonNull E> internalPage(Pageable pageable);
 
     /**
      * Retrieves a paginated list of entities matching the given search text.
@@ -135,7 +135,7 @@ public non-sealed interface ReadService<E extends Persistable<ID>, ID> extends C
      * @param pageable pagination configuration
      * @return a page of matching entities
      */
-    Page<E> internalSearch(String search, Pageable pageable);
+    Page<@NonNull E> internalSearch(String search, Pageable pageable);
 
     /**
      * Retrieves a paginated list of entities based on search and query filters.
@@ -145,7 +145,7 @@ public non-sealed interface ReadService<E extends Persistable<ID>, ID> extends C
      * @param query    the parsed RSQL query
      * @return a page of matching entities
      */
-    Page<E> internalSearch(String search, Pageable pageable, Node query);
+    Page<@NonNull E> internalSearch(String search, Pageable pageable, String query);
 
     /**
      * Retrieves an entity by its ID, or throws if not found.
@@ -186,7 +186,7 @@ public non-sealed interface ReadService<E extends Persistable<ID>, ID> extends C
      * @param query  the RSQL query node
      * @return count of matching entities
      */
-    long internalCount(String search, Node query);
+    long internalCount(String search, String query);
 
     /**
      * Checks whether an entity with the given ID exists.
@@ -206,7 +206,7 @@ public non-sealed interface ReadService<E extends Persistable<ID>, ID> extends C
      * @param query    optional RSQL query node
      * @return a page of entities
      */
-    private Page<E> resolvePage(String search, Pageable pageable, Node query) {
+    private Page<@NonNull E> resolvePage(String search, Pageable pageable, String query) {
         if (query == null) {
             if (search == null || search.isBlank()) {
                 return internalPage(pageable);
@@ -224,7 +224,7 @@ public non-sealed interface ReadService<E extends Persistable<ID>, ID> extends C
      * @param query  the RSQL query node
      * @return number of matching entities
      */
-    private long resolveCount(String search, Node query) {
+    private long resolveCount(String search, String query) {
         if (query == null) {
             if (search == null || search.isBlank()) {
                 return internalCount();

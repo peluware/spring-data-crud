@@ -1,5 +1,6 @@
 package com.peluware.springframework.crud.core;
 
+import org.jspecify.annotations.NonNull;
 import org.springframework.data.domain.Persistable;
 import org.springframework.data.repository.ListCrudRepository;
 import org.springframework.data.repository.PagingAndSortingRepository;
@@ -17,10 +18,10 @@ import org.springframework.data.repository.PagingAndSortingRepository;
  * @param <R>  the repository type extending both {@link ListCrudRepository} and {@link PagingAndSortingRepository}
  */
 public interface StandardCrudService<
-        E extends Persistable<ID>,
+        E extends Persistable<@NonNull ID>,
         D,
         ID,
-        R extends ListCrudRepository<E, ID> & PagingAndSortingRepository<E, ID>>
+        R extends ListCrudRepository<@NonNull E, @NonNull ID> & PagingAndSortingRepository<@NonNull E, @NonNull ID>>
         extends StandardReadService<E, ID, R>,
         StandardWriteService<E, D, ID, R>,
         CrudService<E, D, ID> {

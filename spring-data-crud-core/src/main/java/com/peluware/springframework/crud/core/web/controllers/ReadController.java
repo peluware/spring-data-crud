@@ -1,8 +1,8 @@
 package com.peluware.springframework.crud.core.web.controllers;
 
 
-import cz.jirutka.rsql.parser.ast.Node;
 import com.peluware.springframework.crud.core.ReadService;
+import org.jspecify.annotations.NonNull;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Persistable;
@@ -24,7 +24,7 @@ import java.util.List;
  * @param <M>  Entity model, which extends {@link Persistable} with an ID type of {@code ID}
  * @param <ID> Type of the entity's identifier (e.g., {@link Long}, {@link String})
  */
-public interface ReadController<M extends Persistable<ID>, ID> {
+public interface ReadController<M extends Persistable<@NonNull ID>, ID> {
 
     ReadService<M, ID> getService();
 
@@ -40,9 +40,9 @@ public interface ReadController<M extends Persistable<ID>, ID> {
      * @return A paginated list of entities matching the search and filter criteria
      */
     @GetMapping
-    default ResponseEntity<Page<M>> page(
+    default ResponseEntity<@NonNull Page<@NonNull M>> page(
             @RequestParam(required = false) String search,
-            @RequestParam(required = false) Node query,
+            @RequestParam(required = false) String query,
             Pageable pageable
     ) {
         return ResponseEntity.ok(getService().page(search, pageable, query));
@@ -55,7 +55,7 @@ public interface ReadController<M extends Persistable<ID>, ID> {
      * @return The entity corresponding to the provided ID
      */
     @GetMapping("/{id}")
-    default ResponseEntity<M> find(@PathVariable ID id) {
+    default ResponseEntity<@NonNull M> find(@PathVariable ID id) {
         return ResponseEntity.ok(getService().find(id));
     }
 
@@ -66,7 +66,7 @@ public interface ReadController<M extends Persistable<ID>, ID> {
      * @return A list of entities corresponding to the provided IDs
      */
     @GetMapping("/ids")
-    default ResponseEntity<List<M>> find(@RequestParam List<ID> ids) {
+    default ResponseEntity<@NonNull List<M>> find(@RequestParam List<ID> ids) {
         return ResponseEntity.ok(getService().find(ids));
     }
 
@@ -76,9 +76,9 @@ public interface ReadController<M extends Persistable<ID>, ID> {
      * @return The total number of entities in the repository
      */
     @GetMapping("/count")
-    default ResponseEntity<Long> count(
+    default ResponseEntity<@NonNull Long> count(
             @RequestParam(required = false) String search,
-            @RequestParam(required = false) Node query
+            @RequestParam(required = false) String query
     ) {
         return ResponseEntity.ok(getService().count(search, query));
     }
@@ -90,7 +90,7 @@ public interface ReadController<M extends Persistable<ID>, ID> {
      * @return {@code true} if the entity exists, {@code false} otherwise
      */
     @GetMapping("/exists")
-    default ResponseEntity<Boolean> exists(@RequestParam ID id) {
+    default ResponseEntity<@NonNull Boolean> exists(@RequestParam ID id) {
         return ResponseEntity.ok(getService().exists(id));
     }
 }

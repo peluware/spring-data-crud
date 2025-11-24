@@ -1,6 +1,7 @@
 package com.peluware.springframework.crud.core.web.controllers;
 
 import com.peluware.springframework.crud.core.WriteService;
+import org.jspecify.annotations.NonNull;
 import org.springframework.data.domain.Persistable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -16,7 +17,7 @@ import org.springframework.web.bind.annotation.*;
  * @param <D>  DTO (Data Transfer Object) used to transfer data for create and update operations
  * @param <ID> Type of the entity's identifier (e.g., {@link Long}, {@link String})
  */
-public interface WriteController<M extends Persistable<ID>, D, ID> {
+public interface WriteController<M extends Persistable<@NonNull ID>, D, ID> {
 
     WriteService<M, D, ID> getService();
 
@@ -30,7 +31,7 @@ public interface WriteController<M extends Persistable<ID>, D, ID> {
      * @return The newly created entity
      */
     @PostMapping
-    default ResponseEntity<M> create(@RequestBody D dto) {
+    default ResponseEntity<@NonNull M> create(@RequestBody D dto) {
         return ResponseEntity.ok(getService().create(dto));
     }
 
@@ -45,7 +46,7 @@ public interface WriteController<M extends Persistable<ID>, D, ID> {
      * @return The updated entity
      */
     @PutMapping("/{id}")
-    default ResponseEntity<M> update(@PathVariable ID id, @RequestBody D dto) {
+    default ResponseEntity<@NonNull M> update(@PathVariable ID id, @RequestBody D dto) {
         return ResponseEntity.ok(getService().update(id, dto));
     }
 
@@ -59,7 +60,7 @@ public interface WriteController<M extends Persistable<ID>, D, ID> {
      * @return A confirmation message indicating the entity was deleted
      */
     @DeleteMapping("/{id}")
-    default ResponseEntity<String> delete(@PathVariable ID id) {
+    default ResponseEntity<@NonNull String> delete(@PathVariable ID id) {
         getService().delete(id);
         return ResponseEntity.ok(deletedMessage(id));
     }

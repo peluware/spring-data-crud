@@ -1,5 +1,6 @@
 package com.peluware.springframework.crud.core.hooks;
 
+import org.jspecify.annotations.NonNull;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Persistable;
 
@@ -94,6 +95,6 @@ public interface ReadHooks<E extends Persistable<ID>, ID> {
      *
      * @param page The page of entities.
      */
-    default void onPage(Page<E> page) {
+    default void onPage(Page<@NonNull E> page) {
     }
 }

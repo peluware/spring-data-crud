@@ -3,12 +3,11 @@ package com.peluware.springframework.crud.core;
 import com.peluware.domain.Order;
 import com.peluware.domain.Pagination;
 import com.peluware.domain.Sort;
-import cz.jirutka.rsql.parser.ast.Node;
 import com.peluware.omnisearch.OmniSearchBaseOptions;
 import com.peluware.omnisearch.OmniSearchOptions;
 
 import lombok.experimental.UtilityClass;
-import org.jetbrains.annotations.NotNull;
+import org.jspecify.annotations.NonNull;
 import org.springframework.data.domain.Pageable;
 
 /**
@@ -26,7 +25,7 @@ public class OmniSearchOptionsFactory {
      * @param query    the parsed RSQL query node, may be null
      * @return a configured {@link OmniSearchOptions} instance
      */
-    public static OmniSearchOptions create(String search, Pageable pageable, Node query) {
+    public static OmniSearchOptions create(String search, Pageable pageable, String query) {
         var sort = pageable.getSort();
         return new OmniSearchOptions()
                 .search(search)
@@ -48,13 +47,13 @@ public class OmniSearchOptionsFactory {
      * @param query  the parsed RSQL query node, may be null
      * @return a configured {@link OmniSearchBaseOptions} instance
      */
-    public static OmniSearchBaseOptions create(String search, Node query) {
+    public static OmniSearchBaseOptions create(String search, String query) {
         return new OmniSearchBaseOptions()
                 .search(search)
                 .query(query);
     }
 
-    private static Order.@NotNull Direction getDirection(org.springframework.data.domain.Sort.Order order) {
+    private static Order.@NonNull Direction getDirection(org.springframework.data.domain.Sort.Order order) {
         return order.isAscending()
                 ? Order.Direction.ASC
                 : Order.Direction.DESC;

@@ -6,7 +6,7 @@ import com.peluware.omnisearch.OmniSearchOptions;
 import com.peluware.springframework.crud.core.exceptions.NotFoundEntityException;
 import com.peluware.springframework.crud.core.providers.EntityClassProvider;
 import com.peluware.springframework.crud.core.providers.RepositoryProvider;
-import cz.jirutka.rsql.parser.ast.Node;
+import org.jspecify.annotations.NonNull;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Persistable;
@@ -30,16 +30,16 @@ import java.util.List;
  * @param <R>  the repository type that extends both {@link ListCrudRepository} and {@link PagingAndSortingRepository}
  */
 public interface StandardReadService<
-        E extends Persistable<ID>,
+        E extends Persistable<@NonNull ID>,
         ID,
-        R extends ListCrudRepository<E, ID> & PagingAndSortingRepository<E, ID>>
+        R extends ListCrudRepository<@NonNull E, @NonNull ID> & PagingAndSortingRepository<@NonNull E, @NonNull ID>>
         extends ReadService<E, ID>, EntityClassProvider<E>, RepositoryProvider<R> {
 
     /**
      * {@inheritDoc}
      */
     @Override
-    default Page<E> internalPage(Pageable pageable) {
+    default Page<@NonNull E> internalPage(Pageable pageable) {
         return getRepository().findAll(pageable);
     }
 
@@ -81,7 +81,7 @@ public interface StandardReadService<
      * {@inheritDoc}
      */
     @Override
-    default Page<E> internalSearch(String search, Pageable pageable) {
+    default Page<@NonNull E> internalSearch(String search, Pageable pageable) {
         return internalSearch(search, pageable, null);
     }
 
@@ -89,7 +89,7 @@ public interface StandardReadService<
      * {@inheritDoc}
      */
     @Override
-    default Page<E> internalSearch(String search, Pageable pageable, Node query) {
+    default Page<@NonNull E> internalSearch(String search, Pageable pageable, String query) {
         var options = toSearchOptions(search, pageable, query);
         var entityClass = getEntityClass();
         var omniSearch = getOmniSearch();
@@ -112,7 +112,7 @@ public interface StandardReadService<
      * {@inheritDoc}
      */
     @Override
-    default long internalCount(String search, Node query) {
+    default long internalCount(String search, String query) {
         var options = toBaseSearchOptions(search, query);
         var omniSearch = getOmniSearch();
         return omniSearch.count(getEntityClass(), options);
@@ -120,11 +120,11 @@ public interface StandardReadService<
 
     OmniSearch getOmniSearch();
 
-    default OmniSearchOptions toSearchOptions(String search, Pageable pageable, Node query) {
+    default OmniSearchOptions toSearchOptions(String search, Pageable pageable, String query) {
         return OmniSearchOptionsFactory.create(search, pageable, query);
     }
 
-    default OmniSearchBaseOptions toBaseSearchOptions(String search, Node query) {
+    default OmniSearchBaseOptions toBaseSearchOptions(String search, String query) {
         return OmniSearchOptionsFactory.create(search, query);
     }
 }

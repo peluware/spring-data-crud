@@ -1,6 +1,6 @@
 package com.peluware.springframework.crud.jpa;
 
-import org.jetbrains.annotations.NotNull;
+import org.jspecify.annotations.NonNull;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
@@ -13,7 +13,7 @@ public class WebCorsConfig {
     public WebMvcConfigurer corsConfigurer() {
         return new WebMvcConfigurer() {
             @Override
-            public void addCorsMappings(@NotNull CorsRegistry registry) {
+            public void addCorsMappings(@NonNull CorsRegistry registry) {
                 registry.addMapping("/**") // aplica a todos los endpoints
                         .allowedOrigins("*") // o especifica: "http://localhost:3000"
                         .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")

@@ -1,6 +1,7 @@
 package com.peluware.springframework.crud.core.web.export;
 
 import lombok.Getter;
+import org.jspecify.annotations.NonNull;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -31,7 +32,7 @@ public interface Exporter<O> {
      * @return a {@link ResponseEntity} containing the exported data as a {@link ByteArrayResource}
      *         that can be downloaded by the client
      */
-    ExportResource export(Iterable<?> elements, O options);
+    ExportResource export(Iterable<?> elements, @NonNull O options);
 
     @Getter
     class ExportResource {
